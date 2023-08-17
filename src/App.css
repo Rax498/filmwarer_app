@@ -10,6 +10,8 @@
 :root {
   --font-roboto: "Roboto Slab", serif;
   --font-raleway: "Raleway", sans-serif;
+  --color-primary: rgb(224, 107, 11);
+  --color-secondary: #373934;
 }
 
 body {
@@ -37,17 +39,18 @@ h1 {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   width: fit-content;
+  cursor: pointer;
 }
 
 .search {
-  width: 51%;
+  width: 40%;
   margin: 1rem 0 2rem;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 1rem 1rem;
+  padding: 0.5rem 0.5rem;
   border-radius: 3rem;
   background: #1f2123;
   -webkit-box-shadow: 5px 5px 7px #1c1d1f, -5px -5px 7px #222527;
@@ -57,7 +60,7 @@ h1 {
 .search input {
   flex: 1;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-family: var(--font-raleway);
   font-weight: 500;
   padding-right: 1rem;
@@ -73,21 +76,43 @@ h1 {
   cursor: pointer;
 }
 
-/* .search button {
-  padding: 20px 40px;
-  border-radius: 0.5rem;
-  margin-left: 15px;
-  color: #a1a1a1;
-  font-family: var(--font-raleway);
-  font-weight: 900;
-  letter-spacing: 0.75px;
-  font-size: 1.25rem;
+.pagination {
+  width: 300px;
+  margin: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+.btn {
+  width: 100px;
+  padding: 10px 5px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 5px;
   cursor: pointer;
-
-  background: #1f2123;
-  -webkit-box-shadow: 5px 5px 7px #1c1d1f, -5px -5px 7px #222527;
-  box-shadow: 5px 5px 7px #1c1d1f, -5px -5px 7px #222527;
-} */
+}
+.btn:hover {
+  transform: scale(1.02);
+  background-color: orange;
+  box-shadow: 2px 5px #5497b1c7;
+}
+.search_Parameters {
+  width: 70vw;
+  padding: 5px;
+  color: white;
+  display: flex;
+  justify-content: space-evenly;
+  align-content: center;
+}
+.selection {
+  width: 100px;
+  padding: 5px;
+  border: 1px solid var(--color-primary);
+  background: var(--color-secondary);
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px;
+}
 
 .empty {
   width: 100%;
@@ -105,7 +130,6 @@ h1 {
 }
 
 .container {
- 
   width: 100%;
   margin-top: 3rem;
 
@@ -155,7 +179,7 @@ h1 {
 
 .movie div:nth-of-type(3) {
   z-index: 2;
-  background-color: #373934;
+  background: var(--color-secondary);
   padding: 16px 24px 24px 24px;
 
   position: absolute;
@@ -193,9 +217,9 @@ h1 {
 }
 
 @media screen and (max-width: 600px) {
-  .app {
-    padding: 4rem 2rem;
-  }
+  /* .app {
+    padding: 1rem 2rem;
+  } */
 
   .search {
     padding: 1rem 1.75rem;
@@ -210,12 +234,26 @@ h1 {
     width: 20px;
     height: 20px;
   }
+  .search_Parameters {
+    width: 90vw;
+    flex-wrap: wrap;
+    font-size: 15px;
+    justify-content: center;
+    align-content: center;
+  }
+  .selection {
+    width: 70px;
+    padding: 5px;
+    margin: 6px;
+    margin-bottom: 10px;
+    flex: 1;
+  }
 }
 
 @media screen and (max-width: 400px) {
-  .app {
-    padding: 4rem 1rem;
-  }
+  /* .app {
+    padding: 1rem 1rem;
+  } */
 
   h1 {
     font-size: 2rem;

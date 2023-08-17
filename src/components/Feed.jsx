@@ -1,89 +1,166 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SeacrhIcon from "./search.svg";
 import MovieCard from "./MovieCard";
-import { useState, useEffect } from "react";
-
 import fetchAPI from "../utils/FetchApi";
 
 const Feed = () => {
   const [movies, setMovies] = useState([]);
   const [searchterm, setSearchterm] = useState("");
-  const [counter, setCounter] = useState("");
+  const [testdata, setTestdata] = useState([]);
+  const [counter, setCounter] = useState(1);
+  const [nextpage, setNextpage] = useState(false);
 
-  // -----------------------------------Fetching Movie from API ------------------------
-  const searchMovie = (searchterm) => {
-    fetchAPI(`titles/search/keyword/${searchterm}`).then((data) =>
-      setMovies(data.results)
-    );
+  const [type, setType] = useState("most_pop_movies");
+  const [genre, setGenre] = useState("Action");
+  const [rating, setRating] = useState(null);
+  const [year, setYear] = useState(2020);
+
+  // ------ api test ------
+  const testApi = () => {
+    fetchAPI(`titles/utils/titleTypes`).then((data) => setTestdata(data));
+    console.log(testdata);
   };
 
-  // ________________________________Preloading movie during start___________________
+  // --------------initial page loading ------------
   useEffect(() => {
-    fetchAPI(
-      `titles?list=most_pop_movies&genre=Drama&year=2020&page=${counter}`
-    ).then((data) => setMovies(data.results));
-    // searchMovie('batman')
+    fetchMovies(type, genre, year, rating);
+    testApi();
   }, [counter]);
-  // console.log(movies)
+
+  // ---------- Fetch/Filter functions --------
+  const fetchMovies = (type, genre, year, rating) => {
+    fetchAPI(
+      `titles?list=${type}&genre=${genre}&year=${year}&info=base_info&page=${counter}`
+    ).then((data) => {
+      const ratingData = data.results.filter(
+        (movie) => movie.ratingsSummary.aggregateRating >= rating
+      );
+      // console.log("rating", ratingData);
+      setMovies(ratingData);
+      data.next != null ? setNextpage(true) : setNextpage(false);
+    });
+  };
+  // console.log("this is movie", movies);
+
+  // ------------- Handling the filter ---------
+  const handleFilter = () => {
+    fetchMovies(type, genre, year, rating);
+  };
+
+  // ------------- Search function ---------
+  const searchMovie = () => {
+    if (searchterm.trim() !== "") {
+      fetchAPI(`titles/search/keyword/${searchterm}`).then((data) => {
+        setMovies(data.results);
+        setCounter(1);
+      });
+    }
+  };
+
+  const handlePreviousClick = () => {};
 
   return (
     <div className="app">
-      <h1>Film Ware</h1>
+      <h1 onClick={() => setCounter(1)}>Film Ware</h1>
 
       <div className="search">
         <input
           type="text"
           value={searchterm}
-          onChange={(e) => {
-            setSearchterm(e.target.value);
-          }}
+          onChange={(e) => setSearchterm(e.target.value)}
           placeholder="add movie Title"
         />
-        <img
-          src={SeacrhIcon}
-          alt="magnifying glass"
-          onClick={() => {
-            searchMovie(searchterm);
-          }}
-        />
-      </div>
-      {/* interactiom------ */}
-      <div style={{ textAlign: "center", paddingBottom: "2vh" }}>
-        <button
-          onClick={() =>
-            setCounter((preCount) => preCount < 100 && preCount + 1)
-          }
-        >
-          NEXT
-        </button>{" "}
-        <br />
-        <input type="number" value={counter} readOnly />
-        <br />
-        <button
-          onClick={() => setCounter((preCount) => preCount > 0 && preCount - 1)}
-        >
-          PREVIOUS
-        </button>{" "}
-        <br />
-        <input
-          type="number"
-          onChange={(e) => e.target.value > 0 && setCounter(e.target.value)}
-          placeholder="page number"
-        />
-        <br />
+        <img src={SeacrhIcon} alt="magnifying glass" onClick={searchMovie} />
       </div>
 
-      {/* ---------------------Loading Movie aCard--------------------- */}
+      {/* // search parameters ---- */}
+      <div className="search_Parameters">
+        <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+          <label htmlFor="searchType">
+            Type
+            <select
+              className="selection"
+              id="searchType"
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+            >
+              <option value="most_pop_movies">Movie</option>
+              <option value="most_pop_series">Series</option>
+            </select>
+          </label>
+
+          <label htmlFor="genreSelect">
+            Genre
+            <select
+              className="selection"
+              id="genreSelect"
+              value={genre}
+              onChange={(e) => setGenre(e.target.value)}
+            >
+              <option value="Action">Action</option>
+              <option value="Comedy">Comedy</option>
+              <option value="Drama">Drama</option>
+            </select>
+          </label>
+
+          <label htmlFor="rating">
+            Rating
+            <input
+              className="selection"
+              id="rating"
+              type="number"
+              value={rating}
+              min={1}
+              max={10}
+              onChange={(e) => setRating(e.target.value)}
+            />
+          </label>
+
+          <label htmlFor="year">
+            Year
+            <input
+              className="selection"
+              id="year"
+              type="number"
+              value={year}
+              max={2023}
+              onChange={(e) => setYear(e.target.value)}
+            />
+          </label>
+        </div>
+        <button className="btn" onClick={() => handleFilter()}>
+          search
+        </button>
+      </div>
+
       {movies?.length > 0 ? (
         <div className="container">
-          {movies.map((movie) => (
-            <MovieCard movie={movie} />
+          {movies.map((movie, index) => (
+            <MovieCard movie={movie} key={index} />
           ))}
         </div>
       ) : (
         <div className="empty">
-          {" "}
-          <h2>No movies found</h2>{" "}
+          <h2>No movies found</h2>
+        </div>
+      )}
+
+      {/* ----------- Bottom_Navigation ---------- */}
+      {nextpage === true && (
+        <div className="pagination">
+          <button
+            className="btn"
+            onClick={() => setCounter((prevCount) => prevCount - 1)}
+          >
+            PREVIOUS
+          </button>
+          <div style={{ color: "white", textAlign: "center" }}>{counter}</div>
+          <button
+            className="btn"
+            onClick={() => setCounter((prevCount) => prevCount + 1)}
+          >
+            NEXT
+          </button>
         </div>
       )}
     </div>
