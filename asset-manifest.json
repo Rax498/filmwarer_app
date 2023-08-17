@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/filmwarer_app/static/css/main.2b7c8806.css",
+    "main.js": "/filmwarer_app/static/js/main.86b19c43.js",
+    "static/media/search.svg": "/filmwarer_app/static/media/search.db964b809d21320fb503cb05f4dc8a09.svg",
+    "index.html": "/filmwarer_app/index.html",
+    "main.2b7c8806.css.map": "/filmwarer_app/static/css/main.2b7c8806.css.map",
+    "main.86b19c43.js.map": "/filmwarer_app/static/js/main.86b19c43.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2b7c8806.css",
+    "static/js/main.86b19c43.js"
+  ]
+}
